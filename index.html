@@ -2,86 +2,156 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Moy Telegram WebApp</title>
+    <title>Меню</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Intel+One+Mono&family=Poppins:wght@400;600&display=swap');
-
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
+            padding: 20px;
+            margin: 0;
         }
 
         h1 {
-            color: #2c3e50;
+            text-align: center;
+            color: #333;
         }
 
-        button {
-            padding: 12px 24px;
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .dish {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            width: 150px;
+            text-align: center;
+        }
+
+        .dish img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .dish h3 {
             font-size: 16px;
+            margin: 10px 0 5px;
+        }
+
+        .counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .counter button {
             background-color: #0088cc;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
+            padding: 5px 10px;
             cursor: pointer;
-            margin-top: 15px;
         }
 
-            button:hover {
-                background-color: #006699;
-            }
-
-        #form {
-            display: none;
-        }
-
-        input {
-            padding: 10px;
-            margin: 10px;
-            width: 80%;
+        #sendOrder {
+            margin: 30px auto;
+            display: block;
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
             font-size: 16px;
+            cursor: pointer;
+        }
+
+        #sendOrder:hover {
+            background-color: #218838;
         }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <!-- Главный блок -->
-    <div id="main">
-        <h1>Добро пожаловать!</h1>
-        <p>Это WebApp, встроенный в Telegram.</p>
-        <button id="buy">🛒 Заказать пиццу</button>
+    <h1>Выберите блюда 🍕</h1>
+    <div class="menu" id="menu">
+        <!-- Пример блюда -->
+        <div class="dish" data-name="Маргарита">
+            <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Пицца">
+            <h3>Маргарита</h3>
+            <div class="counter">
+                <button class="minus">−</button>
+                <span class="count">0</span>
+                <button class="plus">+</button>
+            </div>
+        </div>
+
+        <div class="dish" data-name="Пепперони">
+            <img src="https://cdn-icons-png.flaticon.com/512/3595/3595453.png" alt="Пицца">
+            <h3>Пепперони</h3>
+            <div class="counter">
+                <button class="minus">−</button>
+                <span class="count">0</span>
+                <button class="plus">+</button>
+            </div>
+        </div>
+
+        <div class="dish" data-name="Четыре сыра">
+            <img src="https://cdn-icons-png.flaticon.com/512/3595/3595458.png" alt="Пицца">
+            <h3>Четыре сыра</h3>
+            <div class="counter">
+                <button class="minus">−</button>
+                <span class="count">0</span>
+                <button class="plus">+</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Форма заказа -->
-    <div id="form">
-        <h2>📝 Оформление заказа</h2>
-        <input type="text" id="pizza" placeholder="Название пиццы"><br>
-        <input type="number" id="count" placeholder="Количество"><br>
-        <button id="order">📤 Отправить заказ</button>
-    </div>
+    <button id="sendOrder">📤 Оформить заказ</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const buy = document.getElementById("buy");
-        const order = document.getElementById("order");
+        document.querySelectorAll('.dish').forEach(dish => {
+            const plusBtn = dish.querySelector('.plus');
+            const minusBtn = dish.querySelector('.minus');
+            const countSpan = dish.querySelector('.count');
 
-        buy.addEventListener("click", () => {
-            document.getElementById("main").style.display = "none";
-            document.getElementById("form").style.display = "block";
+            plusBtn.addEventListener('click', () => {
+                countSpan.textContent = parseInt(countSpan.textContent) + 1;
+            });
+
+            minusBtn.addEventListener('click', () => {
+                if (parseInt(countSpan.textContent) > 0) {
+                    countSpan.textContent = parseInt(countSpan.textContent) - 1;
+                }
+            });
         });
 
-        order.addEventListener("click", () => {
-            const pizza = document.getElementById("pizza").value;
-            const count = document.getElementById("count").value;
+        document.getElementById('sendOrder').addEventListener('click', () => {
+            const order = [];
+            document.querySelectorAll('.dish').forEach(dish => {
+                const name = dish.getAttribute('data-name');
+                const count = parseInt(dish.querySelector('.count').textContent);
+                if (count > 0) {
+                    order.push(`${name} x${count}`);
+                }
+            });
 
-            const message = `Пицца: ${pizza}, Кол-во: ${count}`;
+            if (order.length === 0) {
+                alert("Выберите хотя бы одно блюдо!");
+                return;
+            }
+
+            const message = "Заказ:\n" + order.join('\n');
             Telegram.WebApp.sendData(message);
         });
     </script>
 </body>
 </html>
-
-
