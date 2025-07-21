@@ -25,22 +25,63 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            margin-top: 15px;
         }
 
             button:hover {
                 background-color: #006699;
             }
+
+        #form {
+            display: none;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            font-size: 16px;
+        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <h1>Добро пожаловать!</h1>
-    <p>Это WebApp, встроенный в Telegram.</p>
-    <button onclick="Telegram.WebApp.sendData('ZAKAZ PIZZI')">📤 Отправить заказ</button>
+    <!-- Главный блок -->
+    <div id="main">
+        <h1>Добро пожаловать!</h1>
+        <p>Это WebApp, встроенный в Telegram.</p>
+        <button id="buy">🛒 Заказать пиццу</button>
+    </div>
+
+    <!-- Форма заказа -->
+    <div id="form">
+        <h2>📝 Оформление заказа</h2>
+        <input type="text" id="pizza" placeholder="Название пиццы"><br>
+        <input type="number" id="count" placeholder="Количество"><br>
+        <button id="order">📤 Отправить заказ</button>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Расширяет окно WebApp
+        tg.expand();
+
+        const buy = document.getElementById("buy");
+        const order = document.getElementById("order");
+
+        buy.addEventListener("click", () => {
+            document.getElementById("main").style.display = "none";
+            document.getElementById("form").style.display = "block";
+        });
+
+        order.addEventListener("click", () => {
+            const pizza = document.getElementById("pizza").value;
+            const count = document.getElementById("count").value;
+
+            const message = `Пицца: ${pizza}, Кол-во: ${count}`;
+            Telegram.WebApp.sendData(message);
+        });
     </script>
 </body>
 </html>
+
+
