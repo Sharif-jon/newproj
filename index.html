@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    /* Ваши стили остаются без изменений */
     :root {
       --bg-color: #ffffff;
       --text-color: #000000;
@@ -14,7 +15,6 @@
       --button-text-color: #ffffff;
       --card-bg-color: #f8f9fa;
     }
-
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,13 +22,11 @@
       color: var(--text-color);
       padding: 16px;
     }
-
     .tabs {
       display: flex;
       justify-content: space-around;
       margin-bottom: 16px;
     }
-
     .tab {
       flex: 1;
       text-align: center;
@@ -38,20 +36,16 @@
       border-radius: 12px;
       margin: 0 4px;
     }
-
     .tab.active {
       background-color: var(--button-color);
       color: var(--button-text-color);
     }
-
     .section {
       display: none;
     }
-
     .section.active {
       display: block;
     }
-
     .card {
       background-color: var(--card-bg-color);
       border-radius: 12px;
@@ -61,7 +55,6 @@
       margin-bottom: 12px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-
     .card img {
       width: 64px;
       height: 64px;
@@ -69,29 +62,24 @@
       border-radius: 12px;
       margin-right: 12px;
     }
-
     .card-content {
       flex-grow: 1;
     }
-
     .card-title {
       font-size: 16px;
       font-weight: 500;
       margin: 0;
     }
-
     .card-price {
       font-size: 14px;
       margin-top: 4px;
     }
-
     .counter {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-top: 8px;
     }
-
     .counter button {
       width: 28px;
       height: 28px;
@@ -102,7 +90,6 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     .comment-box textarea {
       width: 100%;
       margin-top: 16px;
@@ -111,14 +98,12 @@
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-
     .total {
       font-weight: 600;
       margin-top: 16px;
       font-size: 16px;
       text-align: right;
     }
-
     .order-btn {
       display: block;
       width: 100%;
@@ -176,102 +161,92 @@
 
   <div class="total" id="total">Сумма: 0₽</div>
 
-  <button class="order-btn" onclick="sendOrder()">📦 Оформить заказ</button>
+  <button class="order-btn" id="orderBtn">📦 Оформить заказ</button>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    document.addEventListener('DOMContentLoaded', function() {
+      const tg = window.Telegram.WebApp;
+      tg.expand();
 
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.section');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        sections.forEach(s => s.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('.card').forEach(card => {
-      const plus = card.querySelector('.plus');
-      const minus = card.querySelector('.minus');
-      const countEl = card.querySelector('.count');
-
-      plus.addEventListener('click', () => {
-        countEl.textContent = +countEl.textContent + 1;
-        updateTotal();
-      });
-
-      minus.addEventListener('click', () => {
-        if (+countEl.textContent > 0) {
-          countEl.textContent = +countEl.textContent - 1;
-          updateTotal();
-        }
-      });
-    });
-
-    function updateTotal() {
-      let total = 0;
-      document.querySelectorAll('.card').forEach(card => {
-        const price = +card.dataset.price;
-        const count = +card.querySelector('.count').textContent;
-        total += price * count;
-      });
-      document.getElementById('total').textContent = `Сумма: ${total}₽`;
-    }
-
-    function sendOrder() {
-      const order = [];
-      let total = 0;
-
-      document.querySelectorAll('.card').forEach(card => {
-        const name = card.dataset.name;
-        const price = +card.dataset.price;
-        const count = +card.querySelector('.count').textContent;
-        if (count > 0) {
-          order.push(`${name} x${count} = ${price * count}₽`);
-          total += price * count;
-        }
-      });
-
-      const comment = document.getElementById('comment').value;
-      const userId = tg.initDataUnsafe?.user?.id || 0;
-
-      // Собираем данные заказа
-      const orderData = {
-        user_id: userId,
-        order_text: order.join('\n'),
-        total: total,
-        comment: comment
-      };
-
-      // Отправляем данные в бота через WebApp
-      tg.sendData(JSON.stringify(orderData));
-      tg.close();
-    }
-      });
-
-      const comment = document.getElementById('comment').value;
-      const userId = tg.initDataUnsafe?.user?.id || 0;
-
-      fetch("http://localhost:8000/submit_order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userId,
-          order_text: order.join(', '),
-          total: total,
-          comment: comment,
-        }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          alert(data.message);
-          tg.close();
+      // Обработчики для табов
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          tabs.forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+          
+          this.classList.add('active');
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(tabId).classList.add('active');
         });
-    }
+      });
+
+      // Обработчики для счетчиков
+      document.querySelectorAll('.card').forEach(card => {
+        const plus = card.querySelector('.plus');
+        const minus = card.querySelector('.minus');
+        const countEl = card.querySelector('.count');
+
+        plus.addEventListener('click', function() {
+          countEl.textContent = parseInt(countEl.textContent) + 1;
+          updateTotal();
+        });
+
+        minus.addEventListener('click', function() {
+          const current = parseInt(countEl.textContent);
+          if (current > 0) {
+            countEl.textContent = current - 1;
+            updateTotal();
+          }
+        });
+      });
+
+      // Кнопка оформления заказа
+      document.getElementById('orderBtn').addEventListener('click', sendOrder);
+
+      function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('.card').forEach(card => {
+          const price = parseInt(card.getAttribute('data-price'));
+          const count = parseInt(card.querySelector('.count').textContent);
+          total += price * count;
+        });
+        document.getElementById('total').textContent = `Сумма: ${total}₽`;
+      }
+
+      function sendOrder() {
+        const order = [];
+        let total = 0;
+
+        document.querySelectorAll('.card').forEach(card => {
+          const name = card.getAttribute('data-name');
+          const price = parseInt(card.getAttribute('data-price'));
+          const count = parseInt(card.querySelector('.count').textContent);
+          if (count > 0) {
+            order.push(`${name} x${count} = ${price * count}₽`);
+            total += price * count;
+          }
+        });
+
+        if (order.length === 0) {
+          alert('Пожалуйста, выберите хотя бы один товар!');
+          return;
+        }
+
+        const comment = document.getElementById('comment').value;
+        const userId = tg.initDataUnsafe?.user?.id || 0;
+
+        const orderData = {
+          user_id: userId,
+          order_text: order.join('\n'),
+          total: total,
+          comment: comment || 'Нет комментария'
+        };
+
+        tg.sendData(JSON.stringify(orderData));
+        tg.close();
+      }
+    });
   </script>
 </body>
 </html>
