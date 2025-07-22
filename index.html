@@ -215,37 +215,43 @@
       }
 
       function sendOrder() {
-        const order = [];
-        let total = 0;
+    console.log("Функция sendOrder вызвана"); // Проверка 1
+    
+    const order = [];
+    let total = 0;
 
-        document.querySelectorAll('.card').forEach(card => {
-          const name = card.getAttribute('data-name');
-          const price = parseInt(card.getAttribute('data-price'));
-          const count = parseInt(card.querySelector('.count').textContent);
-          if (count > 0) {
+    document.querySelectorAll('.card').forEach(card => {
+        const count = parseInt(card.querySelector('.count').textContent);
+        if (count > 0) {
+            const name = card.dataset.name;
+            const price = parseInt(card.dataset.price);
             order.push(`${name} x${count} = ${price * count}₽`);
             total += price * count;
-          }
-        });
-
-        if (order.length === 0) {
-          alert('Пожалуйста, выберите хотя бы один товар!');
-          return;
         }
+    });
 
-        const comment = document.getElementById('comment').value;
-        const userId = tg.initDataUnsafe?.user?.id || 0;
+    console.log("Сформирован заказ:", order); // Проверка 2
 
-        const orderData = {
-          user_id: userId,
-          order_text: order.join('\n'),
-          total: total,
-          comment: comment || 'Нет комментария'
-        };
+    if (order.length === 0) {
+        alert('Добавьте хотя бы один товар!');
+        return;
+    }
 
-        tg.sendData(JSON.stringify(orderData));
-        tg.close();
-      }
+    const comment = document.getElementById('comment').value;
+    const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 0;
+    
+    const orderData = {
+        user_id: userId,
+        order_text: order.join('\n'),
+        total: total,
+        comment: comment
+    };
+
+    console.log("Отправляемые данные:", orderData); // Проверка 3
+    
+    Telegram.WebApp.sendData(JSON.stringify(orderData));
+    Telegram.WebApp.close();
+}
     });
   </script>
 </body>
