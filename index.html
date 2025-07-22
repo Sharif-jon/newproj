@@ -1,145 +1,218 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Telegram WebApp Shop</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --hint-color: #999999;
-            --link-color: #0088cc;
-            --button-color: #0088cc;
-            --button-text-color: #ffffff;
-            --section-bg-color: #f1f1f1;
-            --destructive-text-color: #ff3b30;
-        }
+  <meta charset="UTF-8" />
+  <title>Заказ еды</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --hint-color: #999999;
+      --button-color: #0088cc;
+      --button-text-color: #ffffff;
+      --card-bg-color: #f9f9f9;
+    }
 
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
-        }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+    }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
 
-        .subtitle {
-            font-size: 14px;
-            color: var(--hint-color);
-        }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
 
-        .card {
-            background-color: var(--section-bg-color);
-            border-radius: 14px;
-            padding: 15px;
-            margin-top: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
+    .dish {
+      display: flex;
+      background-color: var(--card-bg-color);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
+    .dish img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 12px;
+    }
 
-        .item:last-child {
-            margin-bottom: 0;
-        }
+    .info {
+      flex-grow: 1;
+    }
 
-        .item-title {
-            font-weight: 500;
-        }
+    .title {
+      font-weight: 600;
+      margin: 0;
+      font-size: 16px;
+    }
 
-        .add-btn {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
-            border: none;
-            padding: 10px 16px;
-            font-size: 16px;
-            border-radius: 12px;
-            width: 100%;
-            cursor: pointer;
-        }
+    .desc {
+      font-size: 13px;
+      color: var(--hint-color);
+    }
 
-        .add-btn:hover {
-            filter: brightness(1.05);
-        }
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .destructive {
-            color: var(--destructive-text-color);
-            text-align: center;
-            margin-top: 10px;
-            cursor: pointer;
-        }
+    .counter button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--button-color);
+      color: var(--button-text-color);
+      font-size: 18px;
+      cursor: pointer;
+    }
 
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-    </style>
+    .counter span {
+      font-size: 16px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .order-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--button-color);
+      color: var(--button-text-color);
+      cursor: pointer;
+    }
+
+    .order-btn:hover {
+      filter: brightness(1.05);
+    }
+  </style>
 </head>
 <body>
 
-    <h1>BlueZoom</h1>
-    <div class="subtitle">Компактный, стильный, быстрый. <a href="#">Узнать больше</a></div>
+  <h1>🍽 Меню ресторана</h1>
 
-    <div class="card">
-        <div class="subtitle">ДОПОЛНЕНИЯ</div>
-        <div class="item">
-            <span class="item-title">⚙️ Колёса</span>
-            <span class="item-subtitle">20" Спорт-диск</span>
-        </div>
-        <div class="item">
-            <span class="item-title">🔋 Батарея</span>
-            <span class="item-subtitle">82 кВт⋅ч</span>
-        </div>
-        <div class="destructive" onclick="removeAll()">🗑 Удалить всё</div>
+  <div class="menu">
+    <div class="dish" data-name="Пицца Маргарита">
+      <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Маргарита">
+      <div class="info">
+        <p class="title">Пицца Маргарита</p>
+        <p class="desc">Классическая с моцареллой и томатами</p>
+      </div>
+      <div class="counter">
+        <button class="minus">−</button>
+        <span class="count">0</span>
+        <button class="plus">+</button>
+      </div>
     </div>
 
-    <button class="add-btn" onclick="sendOrder()">🚗 Начать тест-драйв</button>
+    <div class="dish" data-name="Пепперони">
+      <img src="https://cdn-icons-png.flaticon.com/512/3595/3595453.png" alt="Пепперони">
+      <div class="info">
+        <p class="title">Пицца Пепперони</p>
+        <p class="desc">Острая колбаса, томаты, сыр</p>
+      </div>
+      <div class="counter">
+        <button class="minus">−</button>
+        <span class="count">0</span>
+        <button class="plus">+</button>
+      </div>
+    </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        const theme = tg.themeParams;
+    <div class="dish" data-name="Лимонад">
+      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Лимонад">
+      <div class="info">
+        <p class="title">Лимонад</p>
+        <p class="desc">Свежий домашний лимонад</p>
+      </div>
+      <div class="counter">
+        <button class="minus">−</button>
+        <span class="count">0</span>
+        <button class="plus">+</button>
+      </div>
+    </div>
+  </div>
 
-        // Применяем тему от Telegram
-        if (theme) {
-            const cssVars = {
-                '--bg-color': theme.bg_color,
-                '--text-color': theme.text_color,
-                '--hint-color': theme.hint_color,
-                '--link-color': theme.link_color,
-                '--button-color': theme.button_color,
-                '--button-text-color': theme.button_text_color,
-                '--section-bg-color': theme.secondary_bg_color,
-                '--destructive-text-color': theme.destructive_text_color
-            };
-            for (const key in cssVars) {
-                if (cssVars[key]) {
-                    document.documentElement.style.setProperty(key, cssVars[key]);
-                }
-            }
+  <button class="order-btn" onclick="sendOrder()">📤 Оформить заказ</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    const theme = tg.themeParams;
+
+    // Подключаем цвета Telegram темы
+    if (theme) {
+      const vars = {
+        '--bg-color': theme.bg_color,
+        '--text-color': theme.text_color,
+        '--hint-color': theme.hint_color,
+        '--button-color': theme.button_color,
+        '--button-text-color': theme.button_text_color,
+        '--card-bg-color': theme.secondary_bg_color,
+      };
+      for (let key in vars) {
+        if (vars[key]) {
+          document.documentElement.style.setProperty(key, vars[key]);
         }
+      }
+    }
 
-        tg.expand(); // открывает на весь экран
+    tg.expand();
 
-        function sendOrder() {
-            const message = "🚗 Заказ: BlueZoom + доп. опции";
-            Telegram.WebApp.sendData(message);
+    document.querySelectorAll('.dish').forEach(dish => {
+      const plus = dish.querySelector('.plus');
+      const minus = dish.querySelector('.minus');
+      const countSpan = dish.querySelector('.count');
+
+      plus.addEventListener('click', () => {
+        countSpan.textContent = parseInt(countSpan.textContent) + 1;
+      });
+
+      minus.addEventListener('click', () => {
+        let count = parseInt(countSpan.textContent);
+        if (count > 0) {
+          countSpan.textContent = count - 1;
         }
+      });
+    });
 
-        function removeAll() {
-            alert("Все дополнения удалены ❌ (пример)");
+    function sendOrder() {
+      const order = [];
+      document.querySelectorAll('.dish').forEach(dish => {
+        const name = dish.dataset.name;
+        const count = parseInt(dish.querySelector('.count').textContent);
+        if (count > 0) {
+          order.push(`${name} x${count}`);
         }
-    </script>
+      });
 
+      if (order.length === 0) {
+        alert("Пожалуйста, выберите блюда!");
+        return;
+      }
+
+      const message = "🍽 Ваш заказ:\n" + order.join('\n');
+      tg.sendData(message); // отправляем в бота
+    }
+  </script>
 </body>
 </html>
