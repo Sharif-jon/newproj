@@ -2,104 +2,129 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Заказ еды</title>
+  <title>Shawarma Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg-color: #ffffff;
       --text-color: #000000;
-      --hint-color: #999999;
+      --hint-color: #6c757d;
       --button-color: #0088cc;
       --button-text-color: #ffffff;
-      --card-bg-color: #f9f9f9;
+      --card-bg-color: #f8f9fa;
     }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      padding: 20px;
+      padding: 16px;
     }
 
     h1 {
-      font-size: 24px;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 16px;
       text-align: center;
-      margin-bottom: 10px;
     }
 
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .dish {
-      display: flex;
+    .card {
       background-color: var(--card-bg-color);
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      display: flex;
       align-items: center;
-      justify-content: space-between;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
 
-    .dish img {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
+    .card img {
+      width: 64px;
+      height: 64px;
       object-fit: cover;
+      border-radius: 12px;
       margin-right: 12px;
     }
 
-    .info {
+    .card-content {
       flex-grow: 1;
     }
 
-    .title {
-      font-weight: 600;
-      margin: 0;
+    .card-title {
       font-size: 16px;
+      font-weight: 500;
+      margin: 0;
     }
 
-    .desc {
+    .card-desc {
       font-size: 13px;
       color: var(--hint-color);
+      margin-top: 4px;
+    }
+
+    .card-price {
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 4px;
     }
 
     .counter {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-top: 8px;
     }
 
     .counter button {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
       border: none;
       background-color: var(--button-color);
       color: var(--button-text-color);
       font-size: 18px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
     .counter span {
       font-size: 16px;
-      min-width: 20px;
+      width: 20px;
       text-align: center;
     }
 
+    .comment-box {
+      margin-top: 16px;
+    }
+
+    .comment-box textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    .total {
+      font-weight: 600;
+      margin-top: 16px;
+      font-size: 16px;
+      text-align: right;
+    }
+
     .order-btn {
+      display: block;
       width: 100%;
       padding: 14px;
+      margin-top: 16px;
+      background-color: var(--button-color);
+      color: var(--button-text-color);
       font-size: 16px;
       border: none;
       border-radius: 12px;
-      background-color: var(--button-color);
-      color: var(--button-text-color);
+      font-weight: 600;
       cursor: pointer;
     }
 
@@ -110,56 +135,67 @@
 </head>
 <body>
 
-  <h1>🍽 Меню ресторана</h1>
+  <h1>🌯 Меню Shawarma Shop</h1>
 
-  <div class="menu">
-    <div class="dish" data-name="Пицца Маргарита">
-      <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Маргарита">
-      <div class="info">
-        <p class="title">Пицца Маргарита</p>
-        <p class="desc">Классическая с моцареллой и томатами</p>
-      </div>
-      <div class="counter">
-        <button class="minus">−</button>
-        <span class="count">0</span>
-        <button class="plus">+</button>
+  <div id="menu">
+    <div class="card" data-name="Шаурма классическая" data-price="300">
+      <img src="https://cdn-icons-png.flaticon.com/512/5787/5787171.png" alt="Шаурма">
+      <div class="card-content">
+        <p class="card-title">Шаурма классическая</p>
+        <p class="card-desc">Курица, соус, овощи</p>
+        <p class="card-price">Цена: 300₽</p>
+        <div class="counter">
+          <button class="minus">−</button>
+          <span class="count">0</span>
+          <button class="plus">+</button>
+        </div>
       </div>
     </div>
 
-    <div class="dish" data-name="Пепперони">
-      <img src="https://cdn-icons-png.flaticon.com/512/3595/3595453.png" alt="Пепперони">
-      <div class="info">
-        <p class="title">Пицца Пепперони</p>
-        <p class="desc">Острая колбаса, томаты, сыр</p>
-      </div>
-      <div class="counter">
-        <button class="minus">−</button>
-        <span class="count">0</span>
-        <button class="plus">+</button>
+    <div class="card" data-name="Шаурма с говядиной" data-price="400">
+      <img src="https://cdn-icons-png.flaticon.com/512/5787/5787177.png" alt="Говядина">
+      <div class="card-content">
+        <p class="card-title">Шаурма с говядиной</p>
+        <p class="card-desc">Говядина, BBQ, зелень</p>
+        <p class="card-price">Цена: 400₽</p>
+        <div class="counter">
+          <button class="minus">−</button>
+          <span class="count">0</span>
+          <button class="plus">+</button>
+        </div>
       </div>
     </div>
 
-    <div class="dish" data-name="Лимонад">
+    <div class="card" data-name="Лимонад" data-price="150">
       <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Лимонад">
-      <div class="info">
-        <p class="title">Лимонад</p>
-        <p class="desc">Свежий домашний лимонад</p>
-      </div>
-      <div class="counter">
-        <button class="minus">−</button>
-        <span class="count">0</span>
-        <button class="plus">+</button>
+      <div class="card-content">
+        <p class="card-title">Лимонад</p>
+        <p class="card-desc">Свежий напиток</p>
+        <p class="card-price">Цена: 150₽</p>
+        <div class="counter">
+          <button class="minus">−</button>
+          <span class="count">0</span>
+          <button class="plus">+</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="comment-box">
+    <label for="comment"><strong>Комментарий:</strong></label><br />
+    <textarea id="comment" rows="3" placeholder="Например, без лука или острый соус..."></textarea>
+  </div>
+
+  <div class="total" id="total">Сумма: 0₽</div>
 
   <button class="order-btn" onclick="sendOrder()">📤 Оформить заказ</button>
 
   <script>
     const tg = window.Telegram.WebApp;
-    const theme = tg.themeParams;
+    tg.expand();
 
-    // Подключаем цвета Telegram темы
+    // Применяем Telegram тему
+    const theme = tg.themeParams;
     if (theme) {
       const vars = {
         '--bg-color': theme.bg_color,
@@ -176,43 +212,62 @@
       }
     }
 
-    tg.expand();
-
-    document.querySelectorAll('.dish').forEach(dish => {
-      const plus = dish.querySelector('.plus');
-      const minus = dish.querySelector('.minus');
-      const countSpan = dish.querySelector('.count');
+    // Счетчики
+    document.querySelectorAll('.card').forEach(card => {
+      const plus = card.querySelector('.plus');
+      const minus = card.querySelector('.minus');
+      const countEl = card.querySelector('.count');
 
       plus.addEventListener('click', () => {
-        countSpan.textContent = parseInt(countSpan.textContent) + 1;
+        countEl.textContent = +countEl.textContent + 1;
+        updateTotal();
       });
 
       minus.addEventListener('click', () => {
-        let count = parseInt(countSpan.textContent);
+        let count = +countEl.textContent;
         if (count > 0) {
-          countSpan.textContent = count - 1;
+          countEl.textContent = count - 1;
+          updateTotal();
         }
       });
     });
 
+    // Сумма заказа
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('.card').forEach(card => {
+        const price = parseInt(card.dataset.price);
+        const count = parseInt(card.querySelector('.count').textContent);
+        total += price * count;
+      });
+      document.getElementById('total').textContent = `Сумма: ${total}₽`;
+    }
+
+    // Отправка данных
     function sendOrder() {
       const order = [];
-      document.querySelectorAll('.dish').forEach(dish => {
-        const name = dish.dataset.name;
-        const count = parseInt(dish.querySelector('.count').textContent);
+      let total = 0;
+
+      document.querySelectorAll('.card').forEach(card => {
+        const name = card.dataset.name;
+        const price = parseInt(card.dataset.price);
+        const count = parseInt(card.querySelector('.count').textContent);
         if (count > 0) {
-          order.push(`${name} x${count}`);
+          order.push(`${name} x${count} = ${price * count}₽`);
+          total += price * count;
         }
       });
 
+      const comment = document.getElementById('comment').value;
       if (order.length === 0) {
-        alert("Пожалуйста, выберите блюда!");
+        alert("Пожалуйста, выберите хотя бы одно блюдо.");
         return;
       }
 
-      const message = "🍽 Ваш заказ:\n" + order.join('\n');
-      tg.sendData(message); // отправляем в бота
+      const message = `🧾 Ваш заказ:\n${order.join('\n')}\n\n💬 Комментарий: ${comment || 'Нет'}\n💰 Итог: ${total}₽`;
+      tg.sendData(message);
     }
   </script>
+
 </body>
 </html>
