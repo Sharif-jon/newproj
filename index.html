@@ -118,6 +118,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Увеличение/уменьшение количества для каждого блюда
         document.querySelectorAll('.dish').forEach(dish => {
             const plusBtn = dish.querySelector('.plus');
             const minusBtn = dish.querySelector('.minus');
@@ -128,30 +129,4 @@
             });
 
             minusBtn.addEventListener('click', () => {
-                if (parseInt(countSpan.textContent) > 0) {
-                    countSpan.textContent = parseInt(countSpan.textContent) - 1;
-                }
-            });
-        });
-
-        document.getElementById('sendOrder').addEventListener('click', () => {
-            const order = [];
-            document.querySelectorAll('.dish').forEach(dish => {
-                const name = dish.getAttribute('data-name');
-                const count = parseInt(dish.querySelector('.count').textContent);
-                if (count > 0) {
-                    order.push(`${name} x${count}`);
-                }
-            });
-
-            if (order.length === 0) {
-                alert("Выберите хотя бы одно блюдо!");
-                return;
-            }
-
-            const message = "Заказ:\n" + order.join('\n');
-            Telegram.WebApp.sendData(message);
-        });
-    </script>
-</body>
-</html>
+                let count = parseInt(countSpan.textContent);
