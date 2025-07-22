@@ -222,34 +222,35 @@
       document.getElementById('total').textContent = `Сумма: ${total}₽`;
     }
 
-   function sendOrder() {
-    const order = [];
-    let total = 0;
+    function sendOrder() {
+      const order = [];
+      let total = 0;
 
-    document.querySelectorAll('.card').forEach(card => {
+      document.querySelectorAll('.card').forEach(card => {
         const name = card.dataset.name;
         const price = +card.dataset.price;
         const count = +card.querySelector('.count').textContent;
         if (count > 0) {
-            order.push(`${name} x${count} = ${price * count}₽`);
-            total += price * count;
+          order.push(`${name} x${count} = ${price * count}₽`);
+          total += price * count;
         }
-    });
+      });
 
-    const comment = document.getElementById('comment').value;
-    const userId = tg.initDataUnsafe?.user?.id || 0;
+      const comment = document.getElementById('comment').value;
+      const userId = tg.initDataUnsafe?.user?.id || 0;
 
-    const orderData = {
+      // Собираем данные заказа
+      const orderData = {
         user_id: userId,
         order_text: order.join('\n'),
         total: total,
-        comment: comment,
-    };
+        comment: comment
+      };
 
-    // Отправляем данные в бота через WebApp
-    tg.sendData(JSON.stringify(orderData));
-    tg.close();
-}
+      // Отправляем данные в бота через WebApp
+      tg.sendData(JSON.stringify(orderData));
+      tg.close();
+    }
       });
 
       const comment = document.getElementById('comment').value;
