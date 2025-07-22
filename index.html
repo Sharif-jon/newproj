@@ -239,7 +239,7 @@
       const comment = document.getElementById('comment').value;
       const userId = tg.initDataUnsafe?.user?.id || 0;
 
-      fetch("https://sharif-jon.github.io/newproj/", {
+      fetch("http://localhost:8000/submit_order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
